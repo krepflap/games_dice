@@ -30,11 +30,20 @@ class GamesDice::Explainer
   # @return [Symbol] an array, either of "deeper" explanations, or of Integers
   attr_reader :details
 
-  # Counts number of explanation layers "deeper" than this one. A value of 0 means that this
+  # Counts maximum number of explanation layers "deeper" than this one. A value of 0 means that this
   # explanation has no deeper cause than the results of combining individual die rolls.
   # @return [Integer] degree of deeper explanations
-  def content_depth
-    @content_depth ||= calc_content_depth
+  def content_max_depth
+    calc_content_depth
+    @content_depth[1]
+  end
+
+  # Counts minimum number of explanation layers "deeper" than this one. A value of 0 means that this
+  # explanation has at least one direct cause that needs no further explanation
+  # @return [Integer] degree of deeper explanations
+  def content_min_depth
+    calc_content_depth
+    @content_depth[0]
   end
 
   # @return [Array<Hash>]
@@ -47,7 +56,7 @@ class GamesDice::Explainer
   private
 
   def calc_content_depth
-    return recurse_max_depth( details, 0 )
+    @content_depth ||= recurse_max_depth( details, 0 )
   end
 
   def recurse_max_depth current_details, current_depth
@@ -57,6 +66,6 @@ class GamesDice::Explainer
       when GamesDice::DieResult then current_depth + ( detail.rolls.size > 1 ? 1 : 0 )
       when GamesDice::Explainer then recurse_max_depth( detail.details, current_depth + 1 )
       end
-    end.max
+    end.flatten.minmax
   end
 end # class GamesDice::Explainer

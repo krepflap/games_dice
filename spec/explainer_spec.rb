@@ -22,19 +22,31 @@ describe GamesDice::Explainer do
         1,5, result ] ) }
     let( :ge_complex04 ) { GamesDice::Explainer.new( 'weird', 36, :sum, [ge_complex03, ge_simple, ge_complex01 ] ) }
 
-    describe "#content_depth" do
+    describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do
-        ge_simple.content_depth.should == 0
-        ge_complex02.content_depth.should == 0
+        ge_simple.content_max_depth.should == 0
+        ge_complex02.content_max_depth.should == 0
       end
 
       it "should return corrrect numbers for more complex explanations" do
-        ge_complex01.content_depth.should == 1
-        ge_complex03.content_depth.should == 1
-        ge_complex04.content_depth.should == 2
+        ge_complex01.content_max_depth.should == 1
+        ge_complex03.content_max_depth.should == 1
+        ge_complex04.content_max_depth.should == 2
       end
     end
 
+    describe "#content_min_depth" do
+      it "should return 0 for a simple explanation" do
+        ge_simple.content_min_depth.should == 0
+        ge_complex02.content_min_depth.should == 0
+      end
+
+      it "should return corrrect numbers for more complex explanations" do
+        ge_complex01.content_min_depth.should == 0
+        ge_complex03.content_min_depth.should == 0
+        ge_complex04.content_min_depth.should == 1
+      end
+    end
 
   end # describe "instance method"
 
