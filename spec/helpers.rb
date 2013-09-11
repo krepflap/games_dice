@@ -72,3 +72,44 @@ RSpec::Matchers.define :be_valid_distribution do
     "a hash describing a complete probability distribution of integer results"
   end
 end
+
+
+# Matcher used by explainer. Items in expected array of hashes must be present, but
+# hashes may be supersets of this. Any :<foo>_id  must match to another :id field present
+RSpec::Matchers.define :match_explanation do |expected|
+  match do |given|
+    @error = nil
+    if ! given.is_a?(Array)
+      @error = "explanation should be an Array, but it is a #{given.class}"
+    elsif given.any? { |item| ! item.is_a?(Hash) }
+      bad_item = given.first { |item| ! item.is_a?(Hash) }
+      @error = "all items should be Hashes, but found '#{bad_item.inspect}' which is a #{bad_item.class}"
+    elsif given.count != expected.count
+      @error = "expected explanation to have #{expected.count} entries, but it has #{given.count}"
+    end
+
+    given.zip(expected).each do | given_hash, expected_hash |
+      break if @error
+      expected_hash.each do | expected_key, expected_value |
+        if given_hash[ expected_key ] != expected_value
+          @error = "data mismatch in explanation. Expected #{expected_key} => #{expected_value}, got #{expected_key} => #{given_hash[ expected_key ].inspect}"
+          break
+        end
+      end
+    end
+
+    ! @error
+  end
+
+  failure_message_for_should do |given|
+    @error
+  end
+
+  failure_message_for_should_not do |given|
+    'explanation matches, contrary to expectation'
+  end
+
+  description do |given|
+    "an array of hashes that matches an expected explanation"
+  end
+end

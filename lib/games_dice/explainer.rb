@@ -21,6 +21,9 @@ class GamesDice::Explainer
     @details = details
   end
 
+  # @return [String] identifying label
+  attr_reader :label
+
   # @return [Integer] numeric value that is being explained
   attr_reader :number
 
@@ -46,14 +49,44 @@ class GamesDice::Explainer
     @content_depth[0]
   end
 
-  # @return [Array<Hash>]
-  # Types of explanation:
-  # top_down vs bottom_up
-  # depth_first vs breadth_first
-  # flat vs layered
-  # Each entry: an id, a parent id, a number, a label, how it contributes to an "upper" layer, how it derives from a "lower" layer
+  # @!visibility private
+  # Represents the explanation without child data, as a hash. Used internally, but due to way self/other
+  # split is done in Ruby, cannot make this a private method.
+  # @return [Hash] description of this object
+  def as_hash
+    Hash[ :label => label, :number => number, :cause => cause, :id => self.object_id ]
+  end
+
+  def build_depth_first
+    visit_depth_first( self, 0 ) do | array, depth, item |
+      array << case item
+      when Fixnum
+        Hash[ :label => item.to_s, :number => item, :cause => :atom, :id => nil, :depth => depth ]
+      when GamesDice::DieResult
+        Hash[ :label => 'die', :number => item.value, :cause => :complex_die, :id => item.object_id, :depth => depth ]
+      when GamesDice::Explainer
+        h = item.as_hash
+        h[:depth] = depth
+        h
+      end
+    end
+  end
 
   private
+
+  def visit_depth_first explain_object, current_depth, build_structure = [], &block
+    yield( build_structure, current_depth, explain_object )
+    explain_object.details.each do |detail|
+      if detail.is_a?( GamesDice::Explainer )
+        visit_depth_first( detail, current_depth + 1, build_structure ) do |build_structure, current_depth, explain_object|
+          block.call(build_structure, current_depth, explain_object)
+        end
+      else
+        yield( build_structure, current_depth + 1, detail )
+      end
+    end
+    build_structure
+  end
 
   def calc_content_depth
     @content_depth ||= recurse_max_depth( details, 0 )
