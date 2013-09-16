@@ -58,31 +58,33 @@ class GamesDice::Explainer
   end
 
   def build_depth_first
-    visit_depth_first( self, 0 ) do | array, depth, item |
+    visit_depth_first( self, 0 ) do | array, depth, item, stats |
       array << case item
       when Fixnum
-        Hash[ :label => item.to_s, :number => item, :cause => :atom, :id => nil, :depth => depth ]
+        Hash[ :label => item.to_s, :number => item, :cause => :atom, :id => nil, :depth => depth ].merge(stats)
       when GamesDice::DieResult
-        Hash[ :label => 'die', :number => item.value, :cause => :complex_die, :id => item.object_id, :depth => depth ]
+        Hash[ :label => 'die', :number => item.value, :cause => :complex_die, :id => item.object_id, :depth => depth ].merge(stats)
       when GamesDice::Explainer
         h = item.as_hash
         h[:depth] = depth
-        h
+        h.merge(stats)
       end
     end
   end
 
   private
 
-  def visit_depth_first explain_object, current_depth, build_structure = [], &block
-    yield( build_structure, current_depth, explain_object )
+  def visit_depth_first explain_object, current_depth, build_structure = [], stats = Hash[ :first => true, :last => true, :index => 0 ], &block
+    yield( build_structure, current_depth, explain_object, stats )
+    i = 0
+    last_i = explain_object.details.count - 1
     explain_object.details.each do |detail|
+      stats = Hash[ :first => ( i == 0 ), :last => ( i == last_i ), :index => i ]
+      i += 1
       if detail.is_a?( GamesDice::Explainer )
-        visit_depth_first( detail, current_depth + 1, build_structure ) do |build_structure, current_depth, explain_object|
-          block.call(build_structure, current_depth, explain_object)
-        end
+        visit_depth_first( detail, current_depth + 1, build_structure, stats, &block )
       else
-        yield( build_structure, current_depth + 1, detail )
+        yield( build_structure, current_depth + 1, detail, stats )
       end
     end
     build_structure
