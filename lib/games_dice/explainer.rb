@@ -74,12 +74,12 @@ class GamesDice::Explainer
 
   private
 
-  def visit_depth_first explain_object, current_depth, build_structure = [], stats = Hash[ :first => true, :last => true, :index => 0 ], &block
+  def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, &block
     yield( build_structure, current_depth, explain_object, stats )
     i = 0
     last_i = explain_object.details.count - 1
     explain_object.details.each do |detail|
-      stats = Hash[ :first => ( i == 0 ), :last => ( i == last_i ), :index => i ]
+      stats = Hash[ :first => ( i == 0 ), :last => ( i == last_i ), :index => i, :only => ( last_i == 0 ) ]
       i += 1
       if detail.is_a?( GamesDice::Explainer )
         visit_depth_first( detail, current_depth + 1, build_structure, stats, &block )
@@ -88,6 +88,10 @@ class GamesDice::Explainer
       end
     end
     build_structure
+  end
+
+  def default_stats
+    Hash[ :first => true, :last => true, :only => true, :index => 0 ]
   end
 
   def calc_content_depth

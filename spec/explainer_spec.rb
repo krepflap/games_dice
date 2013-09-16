@@ -51,32 +51,32 @@ describe GamesDice::Explainer do
     describe "#build_depth_first" do
       it "should work with a simple structure" do
         ge_simple.build_depth_first.should match_explanation [
-         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>0, :first => true, :last => true, :index => 0 },
-         {:label=>"1", :number=>1, :cause=>:atom, :depth=>1, :first => true, :last => false, :index => 0 },
-         {:label=>"5", :number=>5, :cause=>:atom, :depth=>1, :first => false, :last => false, :index => 1 },
-         {:label=>"6", :number=>6, :cause=>:atom, :depth=>1, :first => false, :last => true, :index => 2 } ]
+         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>0, :first=>true, :last=>true, :index=>0, :only=>true },
+         {:label=>"1", :number=>1, :cause=>:atom, :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false },
+         {:label=>"5", :number=>5, :cause=>:atom, :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false },
+         {:label=>"6", :number=>6, :cause=>:atom, :depth=>1, :first=>false, :last=>true, :index=>2, :only=>false } ]
       end
 
       it "should work with a complex structure" do
         ge_complex04.build_depth_first.should match_explanation [
-         {:label=>"weird", :number=>36, :cause=>:sum, :depth=>0, :first => true, :last => true, :index => 0},
-         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first => true, :last => false, :index => 0},
-         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first => true, :last => false, :index => 0},
-         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first => false, :last => false, :index => 1},
-         {:label=>"die", :number=>6, :cause=>:complex_die, :depth=>2, :first => false, :last => true, :index => 2},
+         {:label=>"weird", :number=>36, :cause=>:sum, :depth=>0, :first=>true, :last=>true, :index=>0, :only=>true},
+         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false},
+         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false},
+         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first=>false, :last=>false, :index=>1, :only=>false},
+         {:label=>"die", :number=>6, :cause=>:complex_die, :depth=>2, :first=>false, :last=>true, :index=>2, :only=>false},
          # TODO: This complex die needs explaining!
 
-         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first => false, :last => false, :index => 1},
-         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first => true, :last => false, :index => 0},
-         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first => false, :last => false, :index => 1},
-         {:label=>"6", :number=>6, :cause=>:atom, :depth=>2, :first => false, :last => true, :index => 2 },
-         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first => false, :last => true, :index => 2},
-         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first => true, :last => false, :index => 0},
-         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first => false, :last => false, :index => 1},
-         {:label=>"1d6", :number=>6, :cause=>:reroll, :depth=>2, :first => false, :last => true, :index => 2},
-         {:label=>"4", :number=>4, :cause=>:atom, :depth=>3, :first => true, :last => false, :index => 0},
-         {:label=>"5", :number=>5, :cause=>:atom, :depth=>3, :first => false, :last => false, :index => 1},
-         {:label=>"6", :number=>6, :cause=>:atom, :depth=>3, :first => false, :last => true, :index => 2 },]
+         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false},
+         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false},
+         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first=>false, :last=>false, :index=>1, :only=>false},
+         {:label=>"6", :number=>6, :cause=>:atom, :depth=>2, :first=>false, :last=>true, :index=>2, :only=>false},
+         {:label=>"3d6", :number=>12, :cause=>:sum, :depth=>1, :first=>false, :last=>true, :index=>2, :only=>false},
+         {:label=>"1", :number=>1, :cause=>:atom, :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false},
+         {:label=>"5", :number=>5, :cause=>:atom, :depth=>2, :first=>false, :last=>false, :index=>1, :only=>false},
+         {:label=>"1d6", :number=>6, :cause=>:reroll, :depth=>2, :first=>false, :last=>true, :index=>2, :only=>false},
+         {:label=>"4", :number=>4, :cause=>:atom, :depth=>3, :first=>true, :last=>false, :index=>0, :only=>false},
+         {:label=>"5", :number=>5, :cause=>:atom, :depth=>3, :first=>false, :last=>false, :index=>1, :only=>false},
+         {:label=>"6", :number=>6, :cause=>:atom, :depth=>3, :first=>false, :last=>true, :index=>2, :only=>false},]
       end
     end
 
