@@ -52,6 +52,12 @@ class GamesDice::Die
     @sides
   end
 
+  # @!attribute [r] description
+  # @return [GamesDice::DieDescription] description of die for use in explanations
+  def description
+    @description ||= GamesDice::DieDescription.new( sides )
+  end
+
   # Calculates probability distribution for this die.
   # @return [GamesDice::Probabilities] probability distribution of the die
   def probabilities

@@ -5,6 +5,7 @@ rescue LoadError
   require "games_dice/probabilities"
 end
 require "games_dice/constants"
+require "games_dice/die_description"
 require "games_dice/die"
 require "games_dice/die_result"
 require "games_dice/explainer"
