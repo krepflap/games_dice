@@ -66,8 +66,6 @@ class GamesDice::Explainer
   def build_depth_first
     visit_depth_first( self, 0 ) do | array, depth, item, stats |
       array << case item
-      when Fixnum
-        Hash[ :label => item.to_s, :number => item, :cause => :atom, :id => nil, :depth => depth ].merge(stats)
       when GamesDice::DieResult
         Hash[ :label => 'die', :number => item.value, :cause => :complex_die, :id => item.object_id, :depth => depth ].merge(stats)
       when GamesDice::Explainer
@@ -82,7 +80,7 @@ class GamesDice::Explainer
 
   def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, &block
     yield( build_structure, current_depth, explain_object, stats )
-    details = explain_object.details || []
+    return unless details = explain_object.details
     i = 0
     last_i = details.count - 1
     details.each do |detail|
