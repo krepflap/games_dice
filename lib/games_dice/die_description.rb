@@ -23,4 +23,10 @@ class GamesDice::DieDescription
   # A short descriptive name for the die.
   # @return [String]
   attr_reader :label
+
+  # Hash representation for templated output via GamesDice::Explainer
+  # @return [Hash]
+  def to_h
+    Hash[ :die_sides => sides, :die_label => label ]
+  end
 end

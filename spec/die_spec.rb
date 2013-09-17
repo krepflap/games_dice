@@ -79,7 +79,7 @@ describe GamesDice::Die do
   end
 
   describe "#description" do
-    it "should return a description object for use elsewhere" do
+    it "should return a description object" do
       die = GamesDice::Die.new(12)
       die.description.should be_a GamesDice::DieDescription
       die.description.sides.should == 12
