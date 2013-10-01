@@ -4,8 +4,9 @@ begin
 rescue LoadError
   require "games_dice/probabilities"
 end
-require "games_dice/constants"
+require "games_dice/explainer_cause"
 require "games_dice/die_description"
+require "games_dice/constants"
 require "games_dice/die"
 require "games_dice/die_result"
 require "games_dice/explainer"
@@ -16,6 +17,7 @@ require "games_dice/bunch"
 require "games_dice/dice"
 require "games_dice/parser"
 require "games_dice/marshal"
+
 
 module GamesDice
   # @!visibility private

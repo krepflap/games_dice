@@ -6,6 +6,7 @@
 #
 
 class GamesDice::DieDescription
+  extend GamesDice::ExplainNodeType
 
   # Creates new instance of GamesDice::DieResult. The object can be initialised "empty" or with a first result.
   # @param [Integer] sides Number of sides

@@ -1,23 +1,24 @@
 require 'helpers'
 
 describe GamesDice::Explainer do
+  let( :d6d ) { GamesDice::DieDescription.new( 6 ) }
+  let( :roll01 ) { GamesDice::Explainer.new( 'd6', 1, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :roll02 ) { GamesDice::Explainer.new( 'd6', 2, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :roll03 ) { GamesDice::Explainer.new( 'd6', 3, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :roll04 ) { GamesDice::Explainer.new( 'd6', 4, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :roll05 ) { GamesDice::Explainer.new( 'd6', 5, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :roll06 ) { GamesDice::Explainer.new( 'd6', 6, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+
   describe "class method" do
     describe "#new" do
       it "should instantiate if provided with valid parameters" do
-        GamesDice::Explainer.new( '3d6', 12, :sum, [1,5,6] ).should be_a GamesDice::Explainer
+        GamesDice::Explainer.new( 'd20', 12, GamesDice::ROLLED_VALUE_CAUSE ).should be_a GamesDice::Explainer
+        GamesDice::Explainer.new( '2d6', 12, :sum, [ roll06, roll06 ] ).should be_a GamesDice::Explainer
       end
     end
   end # describe "class method"
 
   describe "instance method" do
-    let( :d6d ) { GamesDice::DieDescription.new( 6 ) }
-    let( :roll01 ) { GamesDice::Explainer.new( 'd6', 1, :atom, nil, d6d ) }
-    let( :roll02 ) { GamesDice::Explainer.new( 'd6', 2, :atom, nil, d6d ) }
-    let( :roll03 ) { GamesDice::Explainer.new( 'd6', 3, :atom, nil, d6d ) }
-    let( :roll04 ) { GamesDice::Explainer.new( 'd6', 4, :atom, nil, d6d ) }
-    let( :roll05 ) { GamesDice::Explainer.new( 'd6', 5, :atom, nil, d6d ) }
-    let( :roll06 ) { GamesDice::Explainer.new( 'd6', 6, :atom, nil, d6d ) }
-
     let( :ge_simple ) { GamesDice::Explainer.new( '3d6', 12, :sum, [ roll01, roll05 , roll06 ] ) }
     let( :ge_complex01 ) { GamesDice::Explainer.new( '3d6', 12, :sum, [
         roll01, roll05, GamesDice::Explainer.new( '1d6', 6, :reroll, [ roll04, roll05, roll06 ] ) ] ) }

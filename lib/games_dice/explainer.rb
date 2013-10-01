@@ -4,21 +4,26 @@
 # An object of the class represents a single number, and a description of how it was calculated.
 #
 # @example TDB 1
-#  ex = GamesDice::Explanation.new( )
+#  ex = GamesDice::Explainer.new( )
 #
 # @example TDB 2
-#  ex = GamesDice::Explanation.new( )
+#  ex = GamesDice::Explainer.new( )
 #
 #
 
 class GamesDice::Explainer
+  extend GamesDice::ExplainNodeType
+
   # Creates new instance of GamesDice::Explainer.
   # @return [GamesDice::Explainer]
-  def initialize label, number, cause, details = nil, cause_description = nil
+  def initialize label, number, cause, details
     @label = label.to_s
     @number = Integer(number)
-    @cause = cause.to_sym
-    @cause_description = cause_description
+    if ! cause.is_a?( GamesDice::ExplainerCause )
+      raise TypeError, "Cause must be a GamesDice::ExplainerCause, but got #{cause.inspect}"
+    end
+    cause.check_details( details )
+    @cause = cause
     @details = details
   end
 
@@ -28,17 +33,14 @@ class GamesDice::Explainer
   # @return [Integer] numeric value that is being explained
   attr_reader :number
 
-  # @return [Symbol] semantics of how the details are combined
+  # @return [GamesDice::ExplainerCause] semantics of how the value and details should be interpretted
   attr_reader :cause
 
-  # @return [#to_h] relevant details of cause
-  attr_reader :cause_description
-
-  # @return [Array<GamesDice::Explainer>] an Array of "deeper" explanations, or nil
+  # @return [Array<GamesDice::Explainer>,GamesDice::DieDescription] "deeper" explanation of number
   attr_reader :details
 
   # Counts maximum number of explanation layers "deeper" than this one. A value of 0 means that this
-  # explanation has no deeper cause than the results of combining individual die rolls.
+  # explanation has no deeper cause.
   # @return [Integer] degree of deeper explanations
   def content_max_depth
     calc_content_depth
@@ -60,6 +62,7 @@ class GamesDice::Explainer
   def as_hash
     h = Hash[ :label => label, :number => number, :cause => cause, :id => self.object_id ]
     h.merge!( cause_description.to_h  ) if cause_description
+    h[:has_children] = details ? true : false
     h
   end
 

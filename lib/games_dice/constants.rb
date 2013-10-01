@@ -13,4 +13,7 @@ module GamesDice
     # :reroll_new_keeper => '*',
   }
 
+  # Describes a number that has been caused directly by the roll of a die
+  ROLLED_VALUE_CAUSE = GamesDice::ExplainerCause.new( GamesDice::DieDescription, false )
+
 end
