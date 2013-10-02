@@ -18,7 +18,8 @@ class GamesDice::ExplainerCause
   # @param [Boolean] has_many_details
   # @return [GamesDice::ExplainerCause]
   def initialize details_class, has_many_details
-    raise TypeError, "Details class #{details_class} not allowed as explanation detail" unless details_class.is_a? GamesDice::ExplainNodeType
+    raise TypeError, "Details class #{details_class} not allowed as explanation detail" \
+      unless details_class.is_a?(GamesDice::ExplainNodeType) || details_class == GamesDice::ExplainNodeType
     @details_class = details_class
     @has_many_details = has_many_details ? true : false
   end

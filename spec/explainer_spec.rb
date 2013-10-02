@@ -2,33 +2,48 @@ require 'helpers'
 
 describe GamesDice::Explainer do
   let( :d6d ) { GamesDice::DieDescription.new( 6 ) }
-  let( :roll01 ) { GamesDice::Explainer.new( 'd6', 1, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
-  let( :roll02 ) { GamesDice::Explainer.new( 'd6', 2, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
-  let( :roll03 ) { GamesDice::Explainer.new( 'd6', 3, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
-  let( :roll04 ) { GamesDice::Explainer.new( 'd6', 4, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
-  let( :roll05 ) { GamesDice::Explainer.new( 'd6', 5, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
-  let( :roll06 ) { GamesDice::Explainer.new( 'd6', 6, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :d20d ) { GamesDice::DieDescription.new( 20 ) }
+  let( :rolled_1 ) { GamesDice::Explainer.new( 'd6', 1, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :rolled_2 ) { GamesDice::Explainer.new( 'd6', 2, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :rolled_3 ) { GamesDice::Explainer.new( 'd6', 3, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :rolled_4 ) { GamesDice::Explainer.new( 'd6', 4, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :rolled_5 ) { GamesDice::Explainer.new( 'd6', 5, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
+  let( :rolled_6 ) { GamesDice::Explainer.new( 'd6', 6, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
 
   describe "class method" do
     describe "#new" do
       it "should instantiate if provided with valid parameters" do
-        GamesDice::Explainer.new( 'd20', 12, GamesDice::ROLLED_VALUE_CAUSE ).should be_a GamesDice::Explainer
-        GamesDice::Explainer.new( '2d6', 12, :sum, [ roll06, roll06 ] ).should be_a GamesDice::Explainer
+        valid_params = [
+          ['d20', 12, GamesDice::ROLLED_VALUE_CAUSE, d20d],
+          ['2d6', 12, GamesDice::SUM_OF_CAUSE, [ rolled_6, rolled_6 ]],
+        ]
+        valid_params.each do |p|
+          GamesDice::Explainer.new( *p ).should be_a GamesDice::Explainer
+        end
+      end
+
+      it "should not instantiate if provided with bad parameters" do
+        bad_params = [
+          ['2d6', 12, GamesDice::SUM_OF_CAUSE, []], # Sum with no explanation
+        ]
+        bad_params.each do |p|
+          lambda { GamesDice::Explainer.new( *p ) }.should raise_error
+        end
       end
     end
   end # describe "class method"
 
   describe "instance method" do
-    let( :ge_simple ) { GamesDice::Explainer.new( '3d6', 12, :sum, [ roll01, roll05 , roll06 ] ) }
+    let( :ge_simple ) { GamesDice::Explainer.new( '3d6', 12, :sum, [ rolled_1, rolled_5 , rolled_6 ] ) }
     let( :ge_complex01 ) { GamesDice::Explainer.new( '3d6', 12, :sum, [
-        roll01, roll05, GamesDice::Explainer.new( '1d6', 6, :reroll, [ roll04, roll05, roll06 ] ) ] ) }
+        rolled_1, rolled_5, GamesDice::Explainer.new( '1d6', 6, :reroll, [ rolled_4, rolled_5, rolled_6 ] ) ] ) }
     let( :ge_complex02 ) { GamesDice::Explainer.new( '3d6', 12, :sum, [
-        roll01, roll05, GamesDice::DieResult.new(6) ] ) }
+        rolled_1, rolled_5, GamesDice::DieResult.new(6) ] ) }
     let( :ge_complex03 ) {
       result = GamesDice::DieResult.new(6)
-      result.add_roll( 6, :reroll_replace )
+      result.add_roll( 6, :rerolled_replace )
       GamesDice::Explainer.new( '3d6', 12, :sum, [
-        roll01, roll05, result ] ) }
+        rolled_1, rolled_5, result ] ) }
     let( :ge_complex04 ) { GamesDice::Explainer.new( 'weird', 36, :sum, [ge_complex03, ge_simple, ge_complex01 ] ) }
 
     describe "#content_max_depth" do
