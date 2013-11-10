@@ -39,10 +39,10 @@ class GamesDice::ExplainerCause
     if has_many_details
       if ! details.is_a?( Array )
         raise TypeError, "Details should be an Array, but got #{details.inspect}"
-        raise ArgumentError, "Details array is empty" if details.count ==  0
-        if bad_detail = details.find { |d| ! d.is_a?( details_class ) }
-          raise TypeError, "Details should be a #{details_class}, but got #{bad_detail.inspect}"
-        end
+      end
+      raise ArgumentError, "Details array is empty" if details.size ==  0
+      if bad_detail = details.find { |d| ! d.is_a?( details_class ) }
+        raise TypeError, "Details should be a #{details_class}, but got #{bad_detail.inspect}"
       end
     else
       if ! details.is_a?( details_class )
