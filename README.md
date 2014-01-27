@@ -32,8 +32,11 @@ gem as-is, and add them as features within your project code.
 GamesDice is tested routinely on
 
  * MRI Ruby 1.9.3 and 2.0.0
- * Rubinius 2.1.1
- * JRuby in 1.9 mode
+ * Rubinius 2.2.1
+ * JRuby
+
+It may also work on 1.8.7 variants, but this is no longer checked or supported. Failure to
+work on Ruby 1.8.7 will not be treated as high priority to fix.
 
 ## Installation
 
