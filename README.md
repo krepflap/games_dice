@@ -31,10 +31,9 @@ gem as-is, and add them as features within your project code.
 
 GamesDice is tested routinely on
 
- * MRI Ruby 1.8.7, 1.9.3 and 2.0.0
- * Rubinius 1.8 and 1.9
- * JRuby in 1.8 and 1.9 modes
- * Ruby Enterprise Edition
+ * MRI Ruby 1.9.3 and 2.0.0
+ * Rubinius 2.1.1
+ * JRuby in 1.9 mode
 
 ## Installation
 
