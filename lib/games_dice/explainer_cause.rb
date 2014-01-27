@@ -1,5 +1,5 @@
 # This class models descriptions of causes for numbers, such as whether a cause is the roll of a
-# die, or a rule for combining several dice. In effect it applies constraints to the explanation
+# die, or a rule for combining several dice. It represents applies constraints to the explanation
 # graph, so that code traversing an explanation tree can determine how to process each node.
 #
 # An object of the class represents a *type* of cause (which may be shared between many numbers),
@@ -50,6 +50,12 @@ class GamesDice::ExplainerCause
       end
     end
     return
+  end
+
+  def to_h details
+    hash = Hash[
+      :cause => :roll, # TODO: Expand to full set of causes
+    ]
   end
 
 end # class GamesDice::ExplainerCause

@@ -6,7 +6,9 @@
 #
 
 class GamesDice::DieDescription
+  # Tag class and instances as being of this type so they are allowed in the explainer heirarchy
   extend GamesDice::ExplainNodeType
+  include GamesDice::ExplainNodeType
 
   # Creates new instance of GamesDice::DieResult. The object can be initialised "empty" or with a first result.
   # @param [Integer] sides Number of sides

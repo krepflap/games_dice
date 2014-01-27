@@ -24,7 +24,7 @@ describe GamesDice::ExplainerCause do
     describe "#check_details" do
       it "should not raise errors when details are valid" do
         lambda { cause_dd.check_details( valid_die_desc ) }.should_not raise_error
-        lambda { cause_explainlist.check_details( [valid_explanation] ) }.should_not raise_error ArgumentError
+        lambda { cause_explainlist.check_details( [valid_explanation] ) }.should_not raise_error
       end
 
       it "should raise errors when details are not valid" do

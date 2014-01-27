@@ -12,7 +12,9 @@
 #
 
 class GamesDice::Explainer
+  # Tag class and instances as being of this type so they are allowed in the explainer heirarchy
   extend GamesDice::ExplainNodeType
+  include GamesDice::ExplainNodeType
 
   # Creates new instance of GamesDice::Explainer.
   # @return [GamesDice::Explainer]
@@ -61,8 +63,7 @@ class GamesDice::Explainer
   # @return [Hash] description of this object
   def as_hash
     h = Hash[ :label => label, :number => number, :cause => cause, :id => self.object_id ]
-    h.merge!( cause_description.to_h  ) if cause_description
-    h[:has_children] = details ? true : false
+    h.merge!( cause.to_h( details ) )
     h
   end
 
@@ -83,7 +84,8 @@ class GamesDice::Explainer
 
   def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, &block
     yield( build_structure, current_depth, explain_object, stats )
-    return unless details = explain_object.details
+    return build_structure unless explain_object.cause.has_many_details
+    return build_structure unless details = explain_object.details
     i = 0
     last_i = details.count - 1
     details.each do |detail|
@@ -107,16 +109,14 @@ class GamesDice::Explainer
   end
 
   def recurse_max_depth current_details, current_depth
+    return current_depth unless current_details.is_a?( Array )
+
     current_details.map do |detail|
       case detail
       when Fixnum then current_depth
-      when GamesDice::DieResult then current_depth + ( detail.rolls.size > 1 ? 1 : 0 )
-      when GamesDice::Explainer then
-        if detail.details
-          recurse_max_depth( detail.details, current_depth + 1 )
-        else
-          current_depth
-        end
+      when GamesDice::DieDescription then current_depth + ( detail.rolls.size > 1 ? 1 : 0 )
+      when GamesDice::ExplainNodeType then
+        recurse_max_depth( detail.details, current_depth + 1 )
       end
     end.flatten.minmax
   end

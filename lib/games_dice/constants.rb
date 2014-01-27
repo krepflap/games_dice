@@ -16,4 +16,5 @@ module GamesDice
   # Describes a number that has been caused directly by the roll of a die
   ROLLED_VALUE_CAUSE = GamesDice::ExplainerCause.new( GamesDice::DieDescription, false )
   SUM_OF_CAUSE = GamesDice::ExplainerCause.new( GamesDice::ExplainNodeType, true )
+  REROLL_CAUSE = GamesDice::ExplainerCause.new( GamesDice::ExplainNodeType, true )
 end
