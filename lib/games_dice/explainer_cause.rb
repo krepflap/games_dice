@@ -17,11 +17,12 @@ class GamesDice::ExplainerCause
   # @param [Class] details_class
   # @param [Boolean] has_many_details
   # @return [GamesDice::ExplainerCause]
-  def initialize details_class, has_many_details
+  def initialize details_class, has_many_details, cause_symbol
     raise TypeError, "Details class #{details_class} not allowed as explanation detail" \
       unless details_class.is_a?(GamesDice::ExplainNodeType) || details_class == GamesDice::ExplainNodeType
     @details_class = details_class
     @has_many_details = has_many_details ? true : false
+    @cause_symbol = cause_symbol.to_sym
   end
 
   # Which class is used for details of the cause (e.g. number of sides for a die)
@@ -31,6 +32,10 @@ class GamesDice::ExplainerCause
   # Whether or not the details should be in an array
   # @return [Boolean] true if details should be an array
   attr_reader :has_many_details
+
+  # Label for use in template structires
+  # @return [Symbol]
+  attr_reader :cause_symbol
 
   # Raises an error if input param cannot be used as details for this cause.
   # @param [Object] details cause details to check
@@ -54,8 +59,10 @@ class GamesDice::ExplainerCause
 
   def to_h details
     hash = Hash[
-      :cause => :roll, # TODO: Expand to full set of causes
+      :cause => cause_symbol,
     ]
+    hash[:has_children] = has_many_details ? true : false
+    hash
   end
 
 end # class GamesDice::ExplainerCause

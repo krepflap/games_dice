@@ -36,7 +36,7 @@ describe GamesDice::Explainer do
   describe "instance method" do
     let( :ge_simple ) { GamesDice::Explainer.new( '1d20', 12, GamesDice::ROLLED_VALUE_CAUSE, d20d ) }
     let( :ge_complex01 ) { GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [
-        rolled_1, rolled_5, GamesDice::Explainer.new( '1d6', 6, GamesDice::REROLL_CAUSE, [ rolled_4, rolled_5, rolled_6 ] ) ] ) }
+        rolled_1, rolled_5, GamesDice::Explainer.new( '1d8', 6, GamesDice::SUM_OF_CAUSE, [ rolled_6 ] ) ] ) }
     let( :ge_complex02 ) { GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [
         rolled_1, rolled_5, rolled_6 ] ) }
     let( :ge_complex03 ) { GamesDice::Explainer.new( 'weird', 36, GamesDice::SUM_OF_CAUSE, [ge_complex02, ge_complex01 ] ) }
