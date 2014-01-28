@@ -2,9 +2,14 @@
 # other numbers.
 #
 # An object of the class represents a single number, and a description of how it was calculated.
+# The normal way to create an object of this class is to call #explanation_template on a dice
+# object.
 #
-# @example TDB 1
-#  ex = GamesDice::Explainer.new( )
+# @example Explanation for rolling 1 on 1d6, and the resulting template hash
+#  ex = GamesDice::Explainer.new( '1d6', 1, GamesDice::ROLLED_VALUE_CAUSE, GamesDice::DieDescription.new( 6 ) )
+#  ex.build_depth_first
+#  # => { :label => "1d6", :number => 1, :cause => :roll, :depth => 0, :first => true, :last => true,
+#  #      :only => true, :index => 0, :has_children => false, :die_sides => 6, :die_label => 'd6' }
 #
 # @example TDB 2
 #  ex = GamesDice::Explainer.new( )
@@ -79,6 +84,17 @@ class GamesDice::Explainer
       end
     end
   end
+
+  # Should use build_breadth_first to generate a template and then process it
+  def standard_text
+    items = build_depth_first
+    s = ''
+    items.each do |i|
+      s << "#{i[:label]}: #{i[:number]}"
+    end
+    s
+  end
+
 
   private
 

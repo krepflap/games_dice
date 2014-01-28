@@ -67,6 +67,7 @@ class GamesDice::Die
   # Simulates rolling the die
   # @return [Integer] selected value between 1 and #sides inclusive
   def roll
+    @explainer = nil
     if @prng
       @result = @prng.rand(@sides) + 1
     else
@@ -99,5 +100,12 @@ class GamesDice::Die
   # @return [nil] always nil, available for interface equivalence with GamesDice::ComplexDie
   def maps
     nil
+  end
+
+  # Helps to explain the result obtained, in a templatable fashion
+  # @return [GamesDice::Explainer] An explanation of the result
+  def result_explainer
+    return nil unless @result
+    @explainer ||= GamesDice::Explainer.new( "1d#{@sides}", @result, GamesDice::ROLLED_VALUE_CAUSE, self.description )
   end
 end # class GamesDice::Die

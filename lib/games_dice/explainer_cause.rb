@@ -61,7 +61,12 @@ class GamesDice::ExplainerCause
     hash = Hash[
       :cause => cause_symbol,
     ]
-    hash[:has_children] = has_many_details ? true : false
+    if has_many_details
+      hash[:has_children] = true
+    else
+      hash[:has_children] = false
+      hash.merge!( details.to_h )
+    end
     hash
   end
 
