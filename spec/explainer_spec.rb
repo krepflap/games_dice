@@ -68,7 +68,7 @@ describe GamesDice::Explainer do
     describe "#build_depth_first" do
       it "should work with a simple structure" do
         ge_simple.build_depth_first.should match_explanation [
-          {:label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0}
+          {:label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0, :has_children => false}
         ]
       end
     end
