@@ -10,7 +10,7 @@ describe GamesDice::ExplainerCause do
       end
 
       it "should not instantiate if provided with invalid parameters" do
-        lambda { GamesDice::ExplainerCause.new( :die_description, false, :foo ) }.should raise_error TypeError
+        expect { GamesDice::ExplainerCause.new( :die_description, false, :foo ) }.to raise_error TypeError
       end
     end
   end # describe "class method"
@@ -23,22 +23,35 @@ describe GamesDice::ExplainerCause do
 
     describe "#check_details" do
       it "should not raise errors when details are valid" do
-        lambda { cause_dd.check_details( valid_die_desc ) }.should_not raise_error
-        lambda { cause_explainlist.check_details( [valid_explanation] ) }.should_not raise_error
+        expect { cause_dd.check_details( valid_die_desc ) }.to_not raise_error
+        expect { cause_explainlist.check_details( [valid_explanation] ) }.to_not raise_error
       end
 
-      it "should raise errors when details are not valid" do
-        lambda { cause_explainlist.check_details( valid_die_desc ) }.should raise_error TypeError
-        lambda { cause_explainlist.check_details( 44 ) }.should raise_error TypeError
-        lambda { cause_explainlist.check_details( [] ) }.should raise_error ArgumentError
-        lambda { cause_explainlist.check_details( [valid_die_desc] ) }.should raise_error TypeError
+      it "to raise errors when details are not valid" do
+        expect { cause_explainlist.check_details( valid_die_desc ) }.to raise_error TypeError
+        expect { cause_explainlist.check_details( 44 ) }.to raise_error TypeError
+        expect { cause_explainlist.check_details( [] ) }.to raise_error ArgumentError
+        expect { cause_explainlist.check_details( [valid_die_desc] ) }.to raise_error TypeError
 
-        lambda { cause_dd.check_details( 44 ) }.should raise_error TypeError
-        lambda { cause_dd.check_details( [] ) }.should raise_error TypeError
-        lambda { cause_dd.check_details( [valid_die_desc] ) }.should raise_error TypeError
-        lambda { cause_dd.check_details( valid_explanation ) }.should raise_error TypeError
+        expect { cause_dd.check_details( 44 ) }.to raise_error TypeError
+        expect { cause_dd.check_details( [] ) }.to raise_error TypeError
+        expect { cause_dd.check_details( [valid_die_desc] ) }.to raise_error TypeError
+        expect { cause_dd.check_details( valid_explanation ) }.to raise_error TypeError
       end
     end
+
+    describe "#to_h" do
+      it "should describe itself and supplied details as a Hash" do
+        h = cause_dd.to_h( valid_die_desc )
+        h.should be_a Hash
+        h.should == { :cause => :roll, :has_children => false, :die_sides => 6, :die_label => "d6" }
+
+        h = cause_explainlist.to_h( [ valid_explanation ] )
+        h.should be_a Hash
+        h.should == { :cause=> :sum, :has_children => true } # TODO: Not sure where child explanations will be covered
+      end
+    end
+
   end # describe "instance method"
 
 end # describe GamesDice::ExplainerCause

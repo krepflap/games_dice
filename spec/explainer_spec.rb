@@ -2,6 +2,7 @@ require 'helpers'
 
 describe GamesDice::Explainer do
   let( :d6d ) { GamesDice::DieDescription.new( 6 ) }
+  let( :d8d ) { GamesDice::DieDescription.new( 8 ) }
   let( :d20d ) { GamesDice::DieDescription.new( 20 ) }
   let( :rolled_1 ) { GamesDice::Explainer.new( 'd6', 1, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
   let( :rolled_2 ) { GamesDice::Explainer.new( 'd6', 2, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
@@ -39,7 +40,7 @@ describe GamesDice::Explainer do
         rolled_1, rolled_5, GamesDice::Explainer.new( '1d8', 6, GamesDice::SUM_OF_CAUSE, [ rolled_6 ] ) ] ) }
     let( :ge_complex02 ) { GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [
         rolled_1, rolled_5, rolled_6 ] ) }
-    let( :ge_complex03 ) { GamesDice::Explainer.new( 'weird', 36, GamesDice::SUM_OF_CAUSE, [ge_complex02, ge_complex01 ] ) }
+    let( :ge_complex03 ) { GamesDice::Explainer.new( 'weird', 24, GamesDice::SUM_OF_CAUSE, [ge_complex02, ge_complex01 ] ) }
 
     describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do

@@ -101,4 +101,12 @@ describe GamesDice::Die do
     end
   end
 
+  describe "#explain_result" do
+    it "should return a string explanation of the result" do
+      die = GamesDice::Die.new(10)
+      die.roll
+      die.explain_result.should == "1d10: 5"
+    end
+  end
+
 end

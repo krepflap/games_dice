@@ -1,15 +1,15 @@
 # This class models descriptions of causes for numbers, such as whether a cause is the roll of a
-# die, or a rule for combining several dice. It represents applies constraints to the explanation
+# die, or a rule for combining several dice. It represents constraints that apply to the explanation
 # graph, so that code traversing an explanation tree can determine how to process each node.
 #
 # An object of the class represents a *type* of cause (which may be shared between many numbers),
 # and represents what kind of detailed explanation should exist.
 #
 # @example When the explanation node contains an array of deeper explanations
-#  cause = GamesDice::ExplainerCause.new( GamesDice::Explainer, true )
+#  cause = GamesDice::ExplainerCause.new( GamesDice::Explainer, true, :sum )
 #
 # @example When the explanation node is a single die roll
-#  cause = GamesDice::ExplainerCause.new( GamesDice::DieDesription, false )
+#  cause = GamesDice::ExplainerCause.new( GamesDice::DieDesription, false, :roll )
 #
 
 class GamesDice::ExplainerCause
@@ -33,7 +33,7 @@ class GamesDice::ExplainerCause
   # @return [Boolean] true if details should be an array
   attr_reader :has_many_details
 
-  # Label for use in template structires
+  # Label for use in template structures
   # @return [Symbol]
   attr_reader :cause_symbol
 

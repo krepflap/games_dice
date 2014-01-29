@@ -102,10 +102,18 @@ class GamesDice::Die
     nil
   end
 
-  # Helps to explain the result obtained, in a templatable fashion
-  # @return [GamesDice::Explainer] An explanation of the result
+  # @!attribute [r] result_explainer
+  # The value can be used to generate data for templates
+  # @return [GamesDice::Explainer] Explanation of result, or nil if no call to #roll yet
   def result_explainer
     return nil unless @result
     @explainer ||= GamesDice::Explainer.new( "1d#{@sides}", @result, GamesDice::ROLLED_VALUE_CAUSE, self.description )
+  end
+
+  # @!attribute [r] explain_result
+  # @return [String,nil] Explanation of result, or nil if no call to #roll yet.
+  def explain_result
+    return nil unless @result
+    result_explainer.standard_text
   end
 end # class GamesDice::Die
