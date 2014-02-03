@@ -74,14 +74,10 @@ class GamesDice::Explainer
 
   def build_depth_first
     visit_depth_first( self, 0 ) do | array, depth, item, stats |
-      array << case item
-      when GamesDice::DieResult # TODO: This won't happen any more . . .
-        Hash[ :label => 'die', :number => item.value, :cause => :complex_die, :id => item.object_id, :depth => depth ].merge(stats)
-      when GamesDice::Explainer
-        h = item.as_hash
-        h[:depth] = depth
-        h.merge(stats)
-      end
+      h = item.as_hash
+      h[:depth] = depth
+      h.merge!(stats)
+      array << h
     end
   end
 
