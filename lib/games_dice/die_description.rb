@@ -10,7 +10,7 @@ class GamesDice::DieDescription
   extend GamesDice::ExplainNodeType
   include GamesDice::ExplainNodeType
 
-  # Creates new instance of GamesDice::DieResult. The object can be initialised "empty" or with a first result.
+  # Creates new instance of GamesDice::DieDescription.
   # @param [Integer] sides Number of sides
   # @param [String] label Text label to use for this die
   # @return [GamesDice::DieDescription]
@@ -31,5 +31,35 @@ class GamesDice::DieDescription
   # @return [Hash]
   def to_h
     Hash[ :die_sides => sides, :die_label => label ]
+  end
+end
+
+
+class GamesDice::ConstantDescription
+  # Tag class and instances as being of this type so they are allowed in the explainer heirarchy
+  extend GamesDice::ExplainNodeType
+  include GamesDice::ExplainNodeType
+
+  # Creates new instance of GamesDice::ConstantDescription.
+  # @param [Integer] value Numerical value used in dice calculations
+  # @param [String] label Text label to use for this constant
+  # @return [GamesDice::ConstantDescription]
+  def initialize( value, label = 'constant' )
+    @value = Integer(value)
+    @label = label.to_s
+  end
+
+  # Numerical value used in dice calculations.
+  # @return [Integer]
+  attr_reader :value
+
+  # A short descriptive name for the constant.
+  # @return [String]
+  attr_reader :label
+
+  # Hash representation for templated output via GamesDice::Explainer
+  # @return [Hash]
+  def to_h
+    Hash[ :constant_value => self.value, :constant_label => label ]
   end
 end
