@@ -7,7 +7,7 @@
 #
 # @example Explanation for rolling 1 on 1d6, and the resulting template hash
 #  ex = GamesDice::Explainer.new( '1d6', 1, GamesDice::ROLLED_VALUE_CAUSE, GamesDice::DieDescription.new( 6 ) )
-#  ex.build_depth_first
+#  ex.template_hash_depth_first
 #  # => { :label => "1d6", :number => 1, :cause => :roll, :depth => 0, :first => true, :last => true,
 #  #      :only => true, :index => 0, :has_children => false, :die_sides => 6, :die_label => 'd6' }
 #
@@ -63,8 +63,8 @@ class GamesDice::Explainer
   end
 
   # @!visibility private
-  # Represents the explanation without child data, as a hash. Used internally, but due to way self/other
-  # split is done in Ruby, cannot make this a private method.
+  # Represents the explanation without child data, as a hash. Used internally, but due to way
+  # self/other split is done in Ruby, cannot make this a private method.
   # @return [Hash] description of this object
   def as_hash
     h = Hash[ :label => label, :number => number, :cause => cause, :id => self.object_id ]
@@ -75,7 +75,7 @@ class GamesDice::Explainer
   # Creates an Array of Hashes suitable for use in template systems, based on explaining each
   # number in full detail, in turn.
   # @return [Array<Hash>] explanation template structure
-  def build_depth_first
+  def template_hash_depth_first
     visit_depth_first( self, 0 ) do | array, depth, item, stats |
       h = item.as_hash
       h[:depth] = depth
@@ -87,7 +87,7 @@ class GamesDice::Explainer
   # Creates an Array of Hashes suitable for use in template systems, based on explaining numbers
   # in groups at progressively higher levels of detail.
   # @return [Array<Hash>] explanation template structure
-  def build_breadth_first
+  def template_hash_breadth_first
     visit_breadth_first( self, 0 ) do | array, depth, item, stats |
       h = item.as_hash
       h[:depth] = depth
@@ -96,9 +96,9 @@ class GamesDice::Explainer
     end
   end
 
-  # Should use build_breadth_first to generate a template and then process it
+  # Should use template_hash_breadth_first to generate a template and then process it
   def standard_text
-    items = build_breadth_first
+    items = template_hash_breadth_first
     s = ''
     current_label = ''
     items.each do |i|

@@ -75,15 +75,15 @@ describe GamesDice::Explainer do
       end
     end
 
-    describe "#build_depth_first" do
+    describe "#template_hash_depth_first" do
       it "should work with a simple structure" do
-        ge_simple.build_depth_first.should match_explanation [
+        ge_simple.template_hash_depth_first.should match_explanation [
           { :label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0, :has_children => false, :die_sides => 20, :die_label => 'd20' }
         ]
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.build_depth_first.should match_explanation [
+        ge_three.template_hash_depth_first.should match_explanation [
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6, :die_label=>"d6", :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false},
           {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6, :die_label=>"d6", :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false},
@@ -92,7 +92,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.build_depth_first.should match_explanation [
+        ge_bunch_plus.template_hash_depth_first.should match_explanation [
           {:label=>"3d6+6", :number=>18, :cause=>:sum, :has_children=>true, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false},
           {:label=>"d6", :number=>6, :cause=>:roll, :has_children=>false, :die_sides=>6, :die_label=>"d6", :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false},
@@ -104,15 +104,15 @@ describe GamesDice::Explainer do
 
     end
 
-    describe "#build_breadth_first" do
+    describe "#template_hash_breadth_first" do
       it "should work with a simple structure" do
-        ge_simple.build_breadth_first.should match_explanation [
+        ge_simple.template_hash_breadth_first.should match_explanation [
           { :label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0, :has_children => false, :die_sides => 20, :die_label => 'd20' }
         ]
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.build_breadth_first.should match_explanation [
+        ge_three.template_hash_breadth_first.should match_explanation [
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6, :die_label=>"d6", :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false},
           {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6, :die_label=>"d6", :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false},
@@ -121,7 +121,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.build_breadth_first.should match_explanation [
+        ge_bunch_plus.template_hash_breadth_first.should match_explanation [
           {:label=>"3d6+6", :number=>18, :cause=>:sum, :has_children=>true, :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false},
           {:label=>"bonus", :number=>6, :cause=>:constant, :has_children=>false, :constant_value=>6, :constant_label=>"bonus", :depth=>1, :first=>false, :last=>true, :index=>1, :only=>false},

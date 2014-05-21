@@ -94,7 +94,7 @@ describe GamesDice::Die do
       ex = die.result_explainer
       ex.should be_a GamesDice::Explainer
       ex.number.should == 5
-      ex.build_depth_first.should match_explanation [
+      ex.template_hash_depth_first.should match_explanation [
         { :label=>"1d10", :number=>5, :cause=>:roll, :depth=>0, :first=>true, :last=>true,
           :only=>true, :index=>0, :has_children => false, :die_sides => 10, :die_label => 'd10' }
       ]
