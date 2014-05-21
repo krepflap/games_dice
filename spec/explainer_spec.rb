@@ -143,7 +143,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.standard_text.should == "3d6+6: 18. 3d6: 12, bonus: 6. d6: 6 + 4 + 2"
+        ge_bunch_plus.standard_text.should == "3d6+6: 18. 3d6: 12 + bonus: 6. d6: 6 + 4 + 2"
       end
     end
 

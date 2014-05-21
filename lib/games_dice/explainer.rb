@@ -110,7 +110,7 @@ class GamesDice::Explainer
         s << "#{i[:label]}: #{i[:number]}"
       else
         if current_label != i[:label]
-          s << ", #{i[:label]}: #{i[:number]}"
+          s << " + #{i[:label]}: #{i[:number]}"
           current_label = i[:label]
         else
           s << " + #{i[:number]}"
