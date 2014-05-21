@@ -2,7 +2,7 @@
 # other numbers.
 #
 # An object of the class represents a single number, and a description of how it was calculated.
-# The normal way to create an object of this class is to call #explanation_template on a dice
+# The normal way to access an object of this class is to call #result_explainer on a dice
 # object.
 #
 # @example Explanation for rolling 1 on 1d6, and the resulting template hash
@@ -10,9 +10,6 @@
 #  ex.template_hash_depth_first
 #  # => { :label => "1d6", :number => 1, :cause => :roll, :depth => 0, :first => true, :last => true,
 #  #      :only => true, :index => 0, :has_children => false, :die_sides => 6, :die_label => 'd6' }
-#
-# @example TDB 2
-#  ex = GamesDice::Explainer.new( )
 #
 #
 
@@ -22,6 +19,10 @@ class GamesDice::Explainer
   include GamesDice::ExplainNodeType
 
   # Creates new instance of GamesDice::Explainer.
+  # @param [String] label identifying label, used in template hash and text output
+  # @param [Integer] number value that is being explained
+  # @param [GamesDice::ExplainerCause] cause semantics of how the value and details should be interpretted
+  # @param [Array<GamesDice::Explainer>,GamesDice::DieDescription] details "deeper" explanation of number
   # @return [GamesDice::Explainer]
   def initialize label, number, cause, details
     @label = label.to_s
@@ -34,7 +35,7 @@ class GamesDice::Explainer
     @details = details
   end
 
-  # @return [String] identifying label
+  # @return [String] identifying label, used in template hash and text output
   attr_reader :label
 
   # @return [Integer] numeric value that is being explained
@@ -47,15 +48,16 @@ class GamesDice::Explainer
   attr_reader :details
 
   # Counts maximum number of explanation layers "deeper" than this one. A value of 0 means that this
-  # explanation has no deeper cause.
+  # explanation has no deeper cause (for instance it is a simple die roll or constant)
   # @return [Integer] degree of deeper explanations
   def content_max_depth
     calc_content_depth
     @content_depth[1]
   end
 
-  # Counts minimum number of explanation layers "deeper" than this one. A value of 0 means that this
-  # explanation has at least one direct cause that needs no further explanation
+  # Counts minimum number of explanation layers "deeper" than this one. Results where some dice
+  # have been rolled multiple times, but others only once will have different depths of explanation
+  # and therefore different values for #content_max_depth and content_min_depth
   # @return [Integer] degree of deeper explanations
   def content_min_depth
     calc_content_depth
@@ -96,7 +98,9 @@ class GamesDice::Explainer
     end
   end
 
-  # Should use template_hash_breadth_first to generate a template and then process it
+  # Creates a text version of the explanation, suitable for debugging, logging or
+  # feedback on how a result was obtained. Internally, it uses #template_hash_breadth_first
+  # @return [String] explanation text
   def standard_text
     items = template_hash_breadth_first
     s = ''
@@ -176,6 +180,7 @@ class GamesDice::Explainer
   def recurse_max_depth current_details, current_depth
     return current_depth unless current_details.is_a?( Array )
 
+    # TODO: Revise this, it should inspect *cause* at each level, not details
     current_details.map do |detail|
       case detail
       when Fixnum then current_depth

@@ -42,11 +42,6 @@ describe GamesDice::Explainer do
       [ GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [ rolled_6, rolled_4, rolled_2 ] ),
         GamesDice::Explainer.new( 'bonus', 6, GamesDice::CONSTANT_VALUE_CAUSE, plus_6 ) ] ) }
 
-    let( :ge_complex01 ) { GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [
-        rolled_1, rolled_5, GamesDice::Explainer.new( '1d8', 6, GamesDice::SUM_OF_CAUSE, [ rolled_6 ] ) ] ) }
-    let( :ge_complex02 ) { GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [
-        rolled_1, rolled_5, rolled_6 ] ) }
-    let( :ge_complex03 ) { GamesDice::Explainer.new( 'weird', 24, GamesDice::SUM_OF_CAUSE, [ge_complex02, ge_complex01 ] ) }
 
     describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do
@@ -56,8 +51,6 @@ describe GamesDice::Explainer do
 
       it "should return corrrect numbers for more complex explanations" do
         ge_bunch_plus.content_max_depth.should == 2
-        ge_complex01.content_max_depth.should == 2
-        ge_complex03.content_max_depth.should == 3
       end
     end
 
@@ -69,9 +62,6 @@ describe GamesDice::Explainer do
 
       it "should return correct numbers for more complex explanations" do
         ge_bunch_plus.content_min_depth.should == 1
-        ge_complex02.content_min_depth.should == 1
-        ge_complex01.content_min_depth.should == 1
-        ge_complex03.content_min_depth.should == 2
       end
     end
 
