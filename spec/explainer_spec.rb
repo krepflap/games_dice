@@ -46,10 +46,10 @@ describe GamesDice::Explainer do
     describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do
         ge_simple.content_max_depth.should == 0
-        ge_three.content_max_depth.should == 1
       end
 
       it "should return corrrect numbers for more complex explanations" do
+        ge_three.content_max_depth.should == 1
         ge_bunch_plus.content_max_depth.should == 2
       end
     end
@@ -57,10 +57,10 @@ describe GamesDice::Explainer do
     describe "#content_min_depth" do
       it "should return 0 for a simple explanation" do
         ge_simple.content_min_depth.should == 0
-        ge_three.content_min_depth.should == 1
       end
 
       it "should return correct numbers for more complex explanations" do
+        ge_three.content_min_depth.should == 1
         ge_bunch_plus.content_min_depth.should == 1
       end
     end
