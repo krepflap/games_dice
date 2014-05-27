@@ -1,11 +1,9 @@
 language: ruby
 rvm:
+  - "1.9.2"
   - "1.9.3"
   - "2.0.0"
   - "2.1.0"
-#  - rbx-2.2.1   # Check https://travis-ci.org/rubinius/travis-canary before enabling
+  - "2.1.1"
   - jruby-19mode
   - jruby-head
-allow_failures:
-  rvm:
-    - ruby-head
