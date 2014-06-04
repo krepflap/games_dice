@@ -68,9 +68,12 @@ class GamesDice::Explainer
   # Represents the explanation without child data, as a hash. Used internally, but due to way
   # self/other split is done in Ruby, cannot make this a private method.
   # @return [Hash] description of this object
-  def as_hash
-    h = Hash[ :label => label, :number => number, :cause => cause, :id => self.object_id ]
+  def as_hash( prefix = nil )
+    h = Hash[ :label => label, :number => number, :id => self.object_id ]
     h.merge!( cause.to_h( details ) )
+    if prefix
+      h = Hash[ h.map{ |k,v| [ (prefix + k.to_s).to_sym, v] } ]
+    end
     h
   end
 
@@ -78,9 +81,13 @@ class GamesDice::Explainer
   # number in full detail, in turn.
   # @return [Array<Hash>] explanation template structure
   def template_hash_depth_first
-    visit_depth_first( self, 0 ) do | array, depth, item, stats |
+    visit_depth_first( self, 0 ) do | array, depth, item, stats, parent_object, parent_stats |
       h = item.as_hash
       h[:depth] = depth
+      if parent_object
+        h.merge!( parent_object.as_hash( 'parent_' ))
+        h.merge!( Hash[ parent_stats.map{ |k,v| [ ('parent_' + k.to_s).to_sym, v] } ])
+      end
       h.merge!(stats)
       array << h
     end
@@ -90,9 +97,13 @@ class GamesDice::Explainer
   # in groups at progressively higher levels of detail.
   # @return [Array<Hash>] explanation template structure
   def template_hash_breadth_first
-    visit_breadth_first( self, 0 ) do | array, depth, item, stats |
+    visit_breadth_first( self, 0 ) do | array, depth, item, stats, parent_object, parent_stats |
       h = item.as_hash
       h[:depth] = depth
+      if parent_object
+        h.merge!( parent_object.as_hash( 'parent_' ))
+        h.merge!( Hash[ parent_stats.map{ |k,v| [ ('parent_' + k.to_s).to_sym, v] } ])
+      end
       h.merge!(stats)
       array << h
     end
@@ -104,21 +115,28 @@ class GamesDice::Explainer
   def standard_text
     items = template_hash_breadth_first
     s = ''
-    current_label = ''
     items.each do |i|
-      if i[:first]
-        if i[:depth] > 0
-          s << ". "
-        end
-        current_label = i[:label]
-        s << "#{i[:label]}: #{i[:number]}"
-      else
-        if current_label != i[:label]
-          s << " + #{i[:label]}: #{i[:number]}"
-          current_label = i[:label]
-        else
-          s << " + #{i[:number]}"
-        end
+      if i[:depth] == 0
+        s << "#{i[:label]}: "
+      elsif i[:first] && (! i[:only] ) && (! i[:parent_only] )
+        s << ". #{i[:parent_label]}: #{i[:parent_number]}  =  "
+      end
+
+      sign = i[:first] ? '' : ' + '
+      if i[:number] < 0
+        sign = i[:first] ? '-' : ' - '
+      end
+      s << sign
+      s << "#{i[:number].abs}"
+
+      if i[:last] && ! i[:only]
+        s << " (#{i[:label]})"
+      end
+
+      if i[:has_children] && i[:only]
+        s << "  =  "
+      elsif i[:has_children] && i[:last]
+        s << ". "
       end
     end
     s
@@ -126,18 +144,19 @@ class GamesDice::Explainer
 
   private
 
-  def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, &block
-    yield( build_structure, current_depth, explain_object, stats )
+  def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, parent_object=nil, &block
+    yield( build_structure, current_depth, explain_object, stats, parent_object, stats )
     return build_structure unless explain_object.cause.has_many_details
     return build_structure unless details = explain_object.details
     last_i = details.count - 1
+    parent_stats = stats
 
     details.each_with_index do |detail,i|
       stats = counting_stats( i, last_i )
       if detail.is_a?( GamesDice::Explainer )
-        visit_depth_first( detail, current_depth + 1, build_structure, stats, &block )
+        visit_depth_first( detail, current_depth + 1, build_structure, stats, explain_object, &block )
       else
-        yield( build_structure, current_depth + 1, detail, stats )
+        yield( build_structure, current_depth + 1, detail, stats, explain_object, parent_stats )
       end
     end
 
@@ -145,15 +164,16 @@ class GamesDice::Explainer
   end
 
   def visit_breadth_first explain_object, current_depth, build_structure = [], stats = default_stats, &block
-    yield( build_structure, current_depth, explain_object, stats ) unless current_depth > 0
+    yield( build_structure, current_depth, explain_object, stats, nil, nil ) unless current_depth > 0
     return build_structure unless explain_object.cause.has_many_details
     return build_structure unless details = explain_object.details
 
     last_i = details.count - 1
+    parent_stats = stats
 
     details.each_with_index do |detail,i|
       stats = counting_stats( i, last_i )
-      yield( build_structure, current_depth + 1, detail, stats )
+      yield( build_structure, current_depth + 1, detail, stats, explain_object, parent_stats )
     end
 
     details.each_with_index do |detail,i|
