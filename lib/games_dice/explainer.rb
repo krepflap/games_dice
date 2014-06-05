@@ -134,14 +134,12 @@ class GamesDice::Explainer
       s << sign
       s << "#{i[:number].abs}"
 
-      if i[:last] && ! i[:only] && i[:label] != i[:parent_label]
-        s << " (#{i[:label]})"
-      end
-
       if i[:has_children] && i[:only]
         s << "  =  "
-      elsif i[:has_children] && i[:last]
-        s << ". "
+      end
+
+      if i[:last] && ! i[:only] && i[:label] != i[:parent_label]
+        s << " (#{i[:label]})"
       end
 
       group_label = i[:label]
