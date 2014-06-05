@@ -77,15 +77,18 @@ describe GamesDice::Explainer do
         ge_three.template_hash_depth_first.should match_explanation [
           { :label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>0,
              :first=>true, :last=>true, :only=>true, :index=>0},
-          {:label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6,
+          { :label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
-          {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6,
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
+          { :label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
-          {:label=>"d6", :number=>5, :cause=>:roll, :has_children=>false, :die_sides=>6,
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
+          { :label=>"d6", :number=>5, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>false, :last=>true, :index=>2, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum }
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 }
         ]
       end
 
@@ -95,19 +98,24 @@ describe GamesDice::Explainer do
             :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1,
             :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum },
+            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
           {:label=>"d6", :number=>6, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 },
           {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>false, :last=>false, :index=>1, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 },
           {:label=>"d6", :number=>2, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>false, :last=>true, :index=>2, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 },
           {:label=>"bonus", :number=>6, :cause=>:constant, :has_children=>false, :constant_value=>6,
             :constant_label=>"bonus", :depth=>1, :first=>false, :last=>true, :index=>1, :only=>false,
-            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum }
+            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 }
         ]
       end
 
@@ -127,13 +135,16 @@ describe GamesDice::Explainer do
            :last=>true, :only=>true, :index=>0 },
           {:label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
           {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>false, :last=>false, :index=>1, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
           {:label=>"d6", :number=>5, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>1, :first=>false, :last=>true, :index=>2, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum }
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 }
         ]
       end
 
@@ -143,19 +154,24 @@ describe GamesDice::Explainer do
             :first=>true, :last=>true, :only=>true, :index=>0 },
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1,
             :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum },
+            :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
           {:label=>"bonus", :number=>6, :cause=>:constant, :has_children=>false,
             :constant_value=>6, :constant_label=>"bonus", :depth=>1, :first=>false,
-            :last=>true, :index=>1, :only=>false, :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum },
+            :last=>true, :index=>1, :only=>false, :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
           {:label=>"d6", :number=>6, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>true, :last=>false, :index=>0, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 },
           {:label=>"d6", :number=>4, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>false, :last=>false, :index=>1, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 },
           {:label=>"d6", :number=>2, :cause=>:roll, :has_children=>false, :die_sides=>6,
             :die_label=>"d6", :depth=>2, :first=>false, :last=>true, :index=>2, :only=>false,
-            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum },
+            :parent_label => '3d6', :parent_number => 12, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>false, :parent_only=>false, :parent_index=>0 }
         ]
       end
 
@@ -167,11 +183,11 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.standard_text.should == "3d6: 12  =  3 + 4 + 5"
+        ge_three.standard_text.should == "3d6: 12  =  3 + 4 + 5 (d6)"
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.standard_text.should == "3d6+6: 18. 3d6: 12 + bonus: 6. d6: 6 + 4 + 2"
+        ge_bunch_plus.standard_text.should == "3d6+6: 18  =  12 (3d6) + 6 (bonus). 3d6: 12  =  6 + 4 + 2 (d6)"
       end
     end
 

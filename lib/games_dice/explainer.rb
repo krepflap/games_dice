@@ -115,11 +115,16 @@ class GamesDice::Explainer
   def standard_text
     items = template_hash_breadth_first
     s = ''
+    group_label = nil
     items.each do |i|
       if i[:depth] == 0
         s << "#{i[:label]}: "
       elsif i[:first] && (! i[:only] ) && (! i[:parent_only] )
         s << ". #{i[:parent_label]}: #{i[:parent_number]}  =  "
+      end
+
+      if group_label && group_label != i[:label] && ! i[:first]
+        s << " (#{group_label})"
       end
 
       sign = i[:first] ? '' : ' + '
@@ -138,14 +143,16 @@ class GamesDice::Explainer
       elsif i[:has_children] && i[:last]
         s << ". "
       end
+
+      group_label = i[:label]
     end
     s
   end
 
   private
 
-  def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, parent_object=nil, &block
-    yield( build_structure, current_depth, explain_object, stats, parent_object, stats )
+  def visit_depth_first explain_object, current_depth, build_structure = [], stats = default_stats, parent_object=nil, parent_stats=nil, &block
+    yield( build_structure, current_depth, explain_object, stats, parent_object, parent_stats )
     return build_structure unless explain_object.cause.has_many_details
     return build_structure unless details = explain_object.details
     last_i = details.count - 1
@@ -154,7 +161,7 @@ class GamesDice::Explainer
     details.each_with_index do |detail,i|
       stats = counting_stats( i, last_i )
       if detail.is_a?( GamesDice::Explainer )
-        visit_depth_first( detail, current_depth + 1, build_structure, stats, explain_object, &block )
+        visit_depth_first( detail, current_depth + 1, build_structure, stats, explain_object, parent_stats, &block )
       else
         yield( build_structure, current_depth + 1, detail, stats, explain_object, parent_stats )
       end
