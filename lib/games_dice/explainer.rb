@@ -115,7 +115,7 @@ class GamesDice::Explainer
   def standard_text
     items = template_hash_breadth_first
     s = ''
-    group_label = nil
+    group_label = nil # This needs to find its way into the template hash data e.g. i[:group_end]
     items.each do |i|
       if i[:depth] == 0
         s << "#{i[:label]}: "
@@ -123,7 +123,7 @@ class GamesDice::Explainer
         s << ". #{i[:parent_label]}: #{i[:parent_number]}  =  "
       end
 
-      if group_label && group_label != i[:label] && ! i[:first]
+      if group_label && group_label != i[:label] && ! i[:first] && i[:label] != i[:parent_label]
         s << " (#{group_label})"
       end
 
@@ -134,7 +134,7 @@ class GamesDice::Explainer
       s << sign
       s << "#{i[:number].abs}"
 
-      if i[:last] && ! i[:only]
+      if i[:last] && ! i[:only] && i[:label] != i[:parent_label]
         s << " (#{i[:label]})"
       end
 

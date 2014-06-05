@@ -5,6 +5,7 @@ describe GamesDice::Explainer do
   let( :d8d ) { GamesDice::DieDescription.new( 8 ) }
   let( :d20d ) { GamesDice::DieDescription.new( 20 ) }
   let( :plus_6 ) { GamesDice::ConstantDescription.new( 6, 'bonus' ) }
+  let( :plus_5 ) { GamesDice::ConstantDescription.new( 5, 'bonus' ) }
   let( :rolled_1 ) { GamesDice::Explainer.new( 'd6', 1, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
   let( :rolled_2 ) { GamesDice::Explainer.new( 'd6', 2, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
   let( :rolled_3 ) { GamesDice::Explainer.new( 'd6', 3, GamesDice::ROLLED_VALUE_CAUSE, d6d ) }
@@ -41,7 +42,9 @@ describe GamesDice::Explainer do
     let( :ge_bunch_plus ) { GamesDice::Explainer.new( '3d6+6', 18, GamesDice::SUM_OF_CAUSE,
       [ GamesDice::Explainer.new( '3d6', 12, GamesDice::SUM_OF_CAUSE, [ rolled_6, rolled_4, rolled_2 ] ),
         GamesDice::Explainer.new( 'bonus', 6, GamesDice::CONSTANT_VALUE_CAUSE, plus_6 ) ] ) }
-
+    let( :ge_attack ) { GamesDice::Explainer.new( 'Attack', 17, GamesDice::SUM_OF_CAUSE,
+      [ GamesDice::Explainer.new( '1d20', 12, GamesDice::ROLLED_VALUE_CAUSE, d20d ),
+        GamesDice::Explainer.new( 'modifier', 5, GamesDice::CONSTANT_VALUE_CAUSE, plus_5 ) ] ) }
 
     describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do
@@ -115,6 +118,21 @@ describe GamesDice::Explainer do
           {:label=>"bonus", :number=>6, :cause=>:constant, :has_children=>false, :constant_value=>6,
             :constant_label=>"bonus", :depth=>1, :first=>false, :last=>true, :index=>1, :only=>false,
             :parent_label => '3d6+6', :parent_number => 18, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 }
+        ]
+      end
+
+      it "should explain 'attack', 1d20+5 -> 17" do
+        ge_attack.template_hash_depth_first.should match_explanation [
+          { :label=>"Attack", :number=>17, :cause=>:sum, :has_children=>true, :depth=>0,
+             :first=>true, :last=>true, :only=>true, :index=>0},
+          { :label=>"1d20", :number=>12, :cause=>:roll, :has_children=>false, :die_sides=>20,
+            :die_label=>"d20", :depth=>1, :first=>true, :last=>false, :index=>0, :only=>false,
+            :parent_label => "Attack", :parent_number => 17, :parent_cause => :sum,
+            :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 },
+          {:label=>"modifier", :number=>5, :cause=>:constant, :has_children=>false, :constant_value=>5,
+            :constant_label=>"bonus", :depth=>1, :first=>false, :last=>true, :index=>1, :only=>false,
+            :parent_label => 'Attack', :parent_number => 17, :parent_cause => :sum,
             :parent_first=>true, :parent_last=>true, :parent_only=>true, :parent_index=>0 }
         ]
       end
