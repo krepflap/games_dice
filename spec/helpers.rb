@@ -101,11 +101,11 @@ RSpec::Matchers.define :match_explanation do |expected|
     ! @error
   end
 
-  failure_message_for_should do |given|
+  failure_message do |given|
     @error
   end
 
-  failure_message_for_should_not do |given|
+  failure_message_when_negated do |given|
     'explanation matches, contrary to expectation'
   end
 
