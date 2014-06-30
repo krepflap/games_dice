@@ -30,7 +30,7 @@ describe GamesDice::Explainer do
           ['2d6', 12, GamesDice::SUM_OF_CAUSE, [ rolled_6, rolled_6 ]],
         ]
         valid_params.each do |p|
-          GamesDice::Explainer.new( *p ).should be_a GamesDice::Explainer
+          expect( GamesDice::Explainer.new( *p ) ).to be_a GamesDice::Explainer
         end
       end
 
@@ -39,7 +39,7 @@ describe GamesDice::Explainer do
           ['2d6', 12, GamesDice::SUM_OF_CAUSE, []], # Sum with no explanation
         ]
         bad_params.each do |p|
-          lambda { GamesDice::Explainer.new( *p ) }.should raise_error
+          expect { GamesDice::Explainer.new( *p ) }.to raise_error
         end
       end
     end
@@ -61,36 +61,36 @@ describe GamesDice::Explainer do
 
     describe "#content_max_depth" do
       it "should return 0 for a simple explanation" do
-        ge_simple.content_max_depth.should == 0
+        expect( ge_simple.content_max_depth ).to eql 0
       end
 
       it "should return corrrect numbers for more complex explanations" do
-        ge_three.content_max_depth.should == 1
-        ge_bunch_plus.content_max_depth.should == 2
+        expect( ge_three.content_max_depth ).to eql 1
+        expect( ge_bunch_plus.content_max_depth ).to eql 2
       end
     end
 
     describe "#content_min_depth" do
       it "should return 0 for a simple explanation" do
-        ge_simple.content_min_depth.should == 0
+        expect( ge_simple.content_min_depth ).to eql 0
       end
 
       it "should return correct numbers for more complex explanations" do
-        ge_three.content_min_depth.should == 1
-        ge_bunch_plus.content_min_depth.should == 1
+        expect( ge_three.content_min_depth ).to eql 1
+        expect( ge_bunch_plus.content_min_depth ).to eql 1
       end
     end
 
     describe "#template_hash_depth_first" do
       it "should work with a simple structure" do
-        ge_simple.template_hash_depth_first.should match_explanation [
+        expect( ge_simple.template_hash_depth_first ).to match_explanation [
           { :label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true,
             :only=>true, :index=>0, :has_children => false, :die_sides => 20, :die_label => 'd20'}
         ]
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.template_hash_depth_first.should match_explanation [
+        expect( ge_three.template_hash_depth_first ).to match_explanation [
           { :label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>0,
              :first=>true, :last=>true, :only=>true, :index=>0},
           { :label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6,
@@ -109,7 +109,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.template_hash_depth_first.should match_explanation [
+        expect( ge_bunch_plus.template_hash_depth_first ).to match_explanation [
           {:label=>"3d6+6", :number=>18, :cause=>:sum, :has_children=>true, :depth=>0,
             :first=>true, :last=>true, :only=>true, :index=>0},
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1,
@@ -136,7 +136,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 'attack', 1d20+5 -> 17" do
-        ge_attack.template_hash_depth_first.should match_explanation [
+        expect( ge_attack.template_hash_depth_first ).to match_explanation [
           { :label=>"Attack", :number=>17, :cause=>:sum, :has_children=>true, :depth=>0,
              :first=>true, :last=>true, :only=>true, :index=>0},
           { :label=>"1d20", :number=>12, :cause=>:roll, :has_children=>false, :die_sides=>20,
@@ -151,7 +151,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 2d8+2d6 -> 19" do
-        ge_2d8_add_2d6.template_hash_depth_first.should match_explanation [
+        expect( ge_2d8_add_2d6.template_hash_depth_first ).to match_explanation [
           {:label=>"2d8+2d6", :number=>19, :cause=>:sum, :has_children=>true,
           :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
 
@@ -191,14 +191,14 @@ describe GamesDice::Explainer do
 
     describe "#template_hash_breadth_first" do
       it "should work with a simple structure" do
-        ge_simple.template_hash_breadth_first.should match_explanation [
+        expect( ge_simple.template_hash_breadth_first ).to match_explanation [
           { :label=>"1d20", :number=>12, :cause=>:roll, :depth=>0, :first=>true, :last=>true,
             :only=>true, :index=>0, :has_children => false, :die_sides => 20, :die_label => 'd20' }
         ]
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.template_hash_breadth_first.should match_explanation [
+        expect( ge_three.template_hash_breadth_first ).to match_explanation [
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>0, :first=>true,
            :last=>true, :only=>true, :index=>0 },
           {:label=>"d6", :number=>3, :cause=>:roll, :has_children=>false, :die_sides=>6,
@@ -217,7 +217,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.template_hash_breadth_first.should match_explanation [
+        expect( ge_bunch_plus.template_hash_breadth_first ).to match_explanation [
           {:label=>"3d6+6", :number=>18, :cause=>:sum, :has_children=>true, :depth=>0,
             :first=>true, :last=>true, :only=>true, :index=>0 },
           {:label=>"3d6", :number=>12, :cause=>:sum, :has_children=>true, :depth=>1,
@@ -244,7 +244,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 'attack', 1d20+5 -> 17" do
-        ge_attack.template_hash_breadth_first.should match_explanation [
+        expect( ge_attack.template_hash_breadth_first ).to match_explanation [
           { :label=>"Attack", :number=>17, :cause=>:sum, :has_children=>true, :depth=>0,
              :first=>true, :last=>true, :only=>true, :index=>0},
           { :label=>"1d20", :number=>12, :cause=>:roll, :has_children=>false, :die_sides=>20,
@@ -259,7 +259,7 @@ describe GamesDice::Explainer do
       end
 
       it "should explain 2d8+2d6 -> 19" do
-        ge_2d8_add_2d6.template_hash_breadth_first.should match_explanation [
+        expect( ge_2d8_add_2d6.template_hash_breadth_first ).to match_explanation [
           {:label=>"2d8+2d6", :number=>19, :cause=>:sum, :has_children=>true,
           :depth=>0, :first=>true, :last=>true, :only=>true, :index=>0},
 
@@ -297,23 +297,23 @@ describe GamesDice::Explainer do
 
     describe "#standard_text" do
       it "should explain 1d20 -> 12" do
-        ge_simple.standard_text.should == "1d20: 12"
+        expect( ge_simple.standard_text ).to eql "1d20: 12"
       end
 
       it "should explain 3d6 -> 12" do
-        ge_three.standard_text.should == "3d6: 12  =  3 + 4 + 5 (d6)"
+        expect( ge_three.standard_text ).to eql "3d6: 12  =  3 + 4 + 5 (d6)"
       end
 
       it "should explain 3d6+6 -> 18" do
-        ge_bunch_plus.standard_text.should == "3d6+6: 18  =  12 (3d6) + 6 (bonus). 3d6: 12  =  6 + 4 + 2 (d6)"
+        expect( ge_bunch_plus.standard_text ).to eql "3d6+6: 18  =  12 (3d6) + 6 (bonus). 3d6: 12  =  6 + 4 + 2 (d6)"
       end
 
       it "should explain 'attack', 1d20+5 -> 17" do
-        ge_attack.standard_text.should == "Attack: 17  =  12 (1d20) + 5 (modifier)"
+        expect( ge_attack.standard_text ).to eql "Attack: 17  =  12 (1d20) + 5 (modifier)"
       end
 
       it "should explain 2d8+2d6 -> 19" do
-        ge_2d8_add_2d6.standard_text.should == "2d8+2d6: 19  =  10 (2d8) + 9 (2d6). 2d8: 10  =  6 + 4 (d8). 2d6: 9  =  3 + 6 (d6)"
+        expect( ge_2d8_add_2d6.standard_text ).to eql "2d8+2d6: 19  =  10 (2d8) + 9 (2d6). 2d8: 10  =  6 + 4 (d8). 2d6: 9  =  3 + 6 (d6)"
       end
     end
 

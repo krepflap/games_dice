@@ -5,8 +5,8 @@ describe GamesDice::ExplainerCause do
   describe "class method" do
     describe "#new" do
       it "should instantiate if provided with valid parameters" do
-        GamesDice::ExplainerCause.new( GamesDice::DieDescription, false, :complex_die ).should be_a GamesDice::ExplainerCause
-        GamesDice::ExplainerCause.new( GamesDice::Explainer, true, :sum ).should be_a GamesDice::ExplainerCause
+        expect( GamesDice::ExplainerCause.new( GamesDice::DieDescription, false, :complex_die ) ).to be_a GamesDice::ExplainerCause
+        expect( GamesDice::ExplainerCause.new( GamesDice::Explainer, true, :sum ) ).to be_a GamesDice::ExplainerCause
       end
 
       it "should not instantiate if provided with invalid parameters" do
@@ -43,12 +43,12 @@ describe GamesDice::ExplainerCause do
     describe "#to_h" do
       it "should describe itself and supplied details as a Hash" do
         h = cause_dd.to_h( valid_die_desc )
-        h.should be_a Hash
-        h.should == { :cause => :roll, :has_children => false, :die_sides => 6, :die_label => "d6" }
+        expect( h ).to be_a Hash
+        expect( h ).to eql Hash[ :cause => :roll, :has_children => false, :die_sides => 6, :die_label => "d6" ]
 
         h = cause_explainlist.to_h( [ valid_explanation ] )
-        h.should be_a Hash
-        h.should == { :cause=> :sum, :has_children => true } # TODO: Not sure where child explanations will be covered
+        expect( h ).to be_a Hash
+        expect( h ).to eql Hash[ :cause=> :sum, :has_children => true ]# TODO: Not sure where child explanations will be covered
       end
     end
 
